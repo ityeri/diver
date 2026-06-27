@@ -12,7 +12,7 @@ spec:
   timeout: 5m
   sourceRef:
     kind: GitRepository
-    name: diver
+    name: flux-system
   path: ./units
   prune: true
   wait: true
