@@ -1,0 +1,44 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNodeConfig
+metadata:
+  name: cilium-network-configuration
+  namespace: kube-system
+spec:
+  nodeSelector:
+    matchLabels: {} # 모든 노드 적용
+  defaults:
+    cluster-pool-ipv4-cidr: "10.244.0.0/16" # pod 를 위한 내부 주소
+    cluster-pool-ipv4-mask-size: "24"
+
+    bpf-lb-service-ip-cidr: "10.96.0.0/12" # 쿠버네티스용 내부 주소
+
+    kube-proxy-replacement: "true"
+    ipam: "cluster-pool"
+
+---
+# vip + LB 설정
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: vip-pool
+  namespace: kube-system
+spec:
+  blocks:
+    - cidr: "10.0.0.199/32" # vip. 모든 인바운드 패킷 박히는곳
+
+---
+# vip 용 l2 announcement 설정
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: vip-l2-announcement
+  namespace: kube-system
+spec:
+  serviceSelector: {} # 인바운드는 다 vip 로 통하니깐 전체 적용
+  nodeSelector:
+    matchLabels:
+      kubernetes.io/os: linux
+  interfaces:
+    - enp2s0
+  loadBalancerIPs: true

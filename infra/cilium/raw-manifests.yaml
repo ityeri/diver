@@ -1,0 +1,8 @@
+cluster:
+  name: diver-cluster
+kubeProxyReplacement: true
+operator:
+  replicas: 1
+routingMode: tunnel
+tunnelProtocol: vxlan
+
