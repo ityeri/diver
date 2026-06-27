@@ -11,7 +11,7 @@ spec:
   retryInterval: 2m
   timeout: 5m
   sourceRef:
-    kind: ExternalArtifact
+    kind: GitRepository
     name: diver
   path: ./units
   prune: true
