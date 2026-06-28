@@ -40,6 +40,6 @@ spec:
     matchLabels:
       kubernetes.io/os: linux
   interfaces:
-    - enp2s0
+    - ^enp[0-9]+s[0-9]+$
   externalIPs: true
   loadBalancerIPs: true
