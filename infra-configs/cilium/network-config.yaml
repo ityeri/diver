@@ -13,8 +13,8 @@ spec:
 
     bpf-lb-service-ip-cidr: "10.96.0.0/12" # 쿠버네티스용 내부 주소
 
-    kube-proxy-replacement: "true"
-    ipam: "cluster-pool"
+    # kube-proxy-replacement: "true"
+    # ipam: "cluster-pool"
 
 ---
 # vip + LB 설정
@@ -25,8 +25,9 @@ metadata:
   namespace: kube-system
 spec:
   blocks:
-    # 10.0.0.199/32
-    - cidr: "100.64.0.199/32" # vip. 모든 인바운드 패킷 박히는곳
+    # vip. 모든 인바운드 패킷 박히는곳
+    - cidr: "10.0.0.199/32"
+    # - cidr: "100.64.0.199/32"
 
 ---
 # vip 용 l2 announcement 설정
