@@ -41,5 +41,5 @@ spec:
       kubernetes.io/os: linux
   interfaces:
     - ^enp[0-9]+s[0-9]+$
-  externalIPs: true
+  externalIPs: false
   loadBalancerIPs: true
