@@ -25,7 +25,8 @@ metadata:
   namespace: kube-system
 spec:
   blocks:
-    - cidr: "10.0.0.199/32" # vip. 모든 인바운드 패킷 박히는곳
+    # 10.0.0.199/32
+    - cidr: "100.64.0.199/32" # vip. 모든 인바운드 패킷 박히는곳
 
 ---
 # vip 용 l2 announcement 설정
