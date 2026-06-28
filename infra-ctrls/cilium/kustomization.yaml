@@ -4,4 +4,3 @@ namespace: kube-system
 
 resources:
   - raw-manifests.yaml
-  - network-config.yaml
