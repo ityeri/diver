@@ -5,7 +5,7 @@ rbac:
 
 serviceAccount:
   create: true
-  name: sealed-secrets-manager
+  name: sealed-secrets-controller
 
 resources:
   requests:
