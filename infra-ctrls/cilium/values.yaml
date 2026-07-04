@@ -1,0 +1,21 @@
+ipam:
+  mode: kubernetes
+
+kubeProxyReplacement: true
+
+operator:
+  replicas: 1
+
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+
+k8sServiceHost: localhost
+k8sServicePort: 7445
+
+gatewayAPI:
+  enabled: true
+
+l2announcements:
+  enabled: true
