@@ -15,7 +15,10 @@ data:
     PostDown = iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -o enp2s0 -j MASQUERADE
 
     # exampe peer
+    # [Peer]
     # PublicKey = REPLACE_WITH_LAPTOP_PUBLIC_KEY
     # AllowedIPs = 10.8.0.2/32
 
     [Peer]
+    PublicKey = qAY3ZGnSzb4MXK9AD33UwvKemNJNUIEcSmYLjkUKT0E=
+    AllowedIPs = 10.8.0.2/32
