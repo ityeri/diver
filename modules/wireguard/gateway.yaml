@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wireguard
+  namespace: wireguard
+  annotations:
+    io.cilium/lb-ipam-ips: 10.0.0.199
+    lbipam.cilium.io/sharing-key: public-vip
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: wireguard
+  ports:
+    - name: wireguard
+      protocol: UDP
+      port: 51820
+      targetPort: wireguard

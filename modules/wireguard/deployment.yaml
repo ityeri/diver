@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wireguard
+  namespace: wireguard
+  labels:
+    app.kubernetes.io/name: wireguard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wireguard
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: wireguard
+    spec:
+      initContainers:
+        - name: render-wireguard-config
+          image: alpine:3.20
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              apk add --no-cache gettext
+              envsubst < /config-template/wg0.conf.tpl > /generated/wg0.conf
+              chmod 600 /generated/wg0.conf
+          env:
+            - name: SERVER_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wireguard-server-key
+                  key: privatekey
+          volumeMounts:
+            - name: config-template
+              mountPath: /config-template
+              readOnly: true
+            - name: generated-config
+              mountPath: /generated
+
+      containers:
+        - name: wireguard
+          image: lscr.io/linuxserver/wireguard:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: wireguard
+              containerPort: 51820
+              protocol: UDP
+          env:
+            - name: TZ
+              value: Asia/Seoul
+            - name: LOG_CONFS
+              value: "true"
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - NET_ADMIN
+                - SYS_MODULE
+          volumeMounts:
+            - name: generated-config
+              mountPath: /config/wg_confs
+            - name: dev-net-tun
+              mountPath: /dev/net/tun
+
+      volumes:
+        - name: config-template
+          configMap:
+            name: wireguard-config-template
+        - name: generated-config
+          emptyDir: {}
+        - name: dev-net-tun
+          hostPath:
+            path: /dev/net/tun
+            type: CharDevice

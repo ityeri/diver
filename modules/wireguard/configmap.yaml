@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wireguard-config-template
+  namespace: wireguard
+data:
+  wg0.conf.tpl: |
+    [Interface]
+    Address = 10.8.0.1/24
+    ListenPort = 51820
+    PrivateKey = ${SERVER_PRIVATE_KEY}
+
+    # nat 설정
+    PostUp = iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o enp2s0 -j MASQUERADE
+    PostDown = iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -o enp2s0 -j MASQUERADE
+
+    # exampe peer
+    # PublicKey = REPLACE_WITH_LAPTOP_PUBLIC_KEY
+    # AllowedIPs = 10.8.0.2/32
+
+    [Peer]
