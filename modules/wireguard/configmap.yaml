@@ -11,8 +11,8 @@ data:
     PrivateKey = ${SERVER_PRIVATE_KEY}
 
     # nat 설정
-    PostUp = iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o enp2s0 -j MASQUERADE
-    PostDown = iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -o enp2s0 -j MASQUERADE
+    PostUp = iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+    PostDown = iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 
     # exampe peer
     # [Peer]
@@ -20,5 +20,5 @@ data:
     # AllowedIPs = 10.8.0.2/32
 
     [Peer]
-    PublicKey = qAY3ZGnSzb4MXK9AD33UwvKemNJNUIEcSmYLjkUKT0E=
+    PublicKey = 1kIj172ik2M91G7cXsX8wmXWMEahgXP8trV0ZP9MRmA=
     AllowedIPs = 10.8.0.2/32
