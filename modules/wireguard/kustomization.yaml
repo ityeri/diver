@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - ./namespace.yaml
-  - ./sealed-secret-key.yaml
+  - ./sealed-secret.yaml
   - ./deployment.yaml
   - ./gateway.yaml
 
