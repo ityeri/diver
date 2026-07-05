@@ -45,5 +45,3 @@ externalIPs:
 k8sClientRateLimit:
   qps: 20
   burst: 40
-
-devices: enp2s0
