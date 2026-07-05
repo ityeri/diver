@@ -67,7 +67,7 @@ spec:
       volumes:
         - name: config-template
           configMap:
-            name: wireguard-config-template
+            name: wireguard-config
         - name: generated-config
           emptyDir: {}
         - name: dev-net-tun

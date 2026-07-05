@@ -9,7 +9,7 @@ resources:
   - ./gateway.yaml
 
 configMapGenerator:
-  - name: wireguard-config-template
+  - name: wireguard-config
     namespace: wireguard
     files:
       - wg0.conf.tpl=./wg0.conf.tpl

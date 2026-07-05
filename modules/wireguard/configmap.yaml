@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: wireguard-config-template
+  name: wireguard-config
   namespace: wireguard
 data:
   wg0.conf.tpl: |
