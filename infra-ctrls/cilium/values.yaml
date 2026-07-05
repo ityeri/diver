@@ -41,3 +41,8 @@ l2podAnnouncements:
 
 externalIPs:
   enabled: true
+
+k8sClientRateLimit:
+  qps: 20
+  burst: 40
+
