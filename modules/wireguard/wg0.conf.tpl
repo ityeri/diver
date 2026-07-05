@@ -1,0 +1,22 @@
+[Interface]
+Address = 10.8.0.1/24
+ListenPort = 51820
+PrivateKey = ${SERVER_PRIVATE_KEY}
+
+# nat 설정
+PostUp = iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+PostDown = iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+
+# exampe peer
+# [Peer]
+# PublicKey = REPLACE_WITH_LAPTOP_PUBLIC_KEY
+# AllowedIPs = 10.8.0.2/32
+
+[Peer]
+PublicKey = 1kIj172ik2M91G7cXsX8wmXWMEahgXP8trV0ZP9MRmA=
+AllowedIPs = 10.8.0.2/32
+
+[Peer]
+PublicKey = xUdRTxvHlheOsmSmuTEtV/MVzmxmJ/c6yjDIaw91YRU=
+AllowedIPs = 10.8.0.3/32
+
