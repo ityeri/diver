@@ -22,3 +22,7 @@ data:
     [Peer]
     PublicKey = 1kIj172ik2M91G7cXsX8wmXWMEahgXP8trV0ZP9MRmA=
     AllowedIPs = 10.8.0.2/32
+
+    [Peer]
+    PublicKey = xUdRTxvHlheOsmSmuTEtV/MVzmxmJ/c6yjDIaw91YRU=
+    AllowedIPs = 10.8.0.3/32
