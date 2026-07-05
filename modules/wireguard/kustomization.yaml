@@ -7,3 +7,9 @@ resources:
   - ./sealed-secret-key.yaml
   - ./deployment.yaml
   - ./gateway.yaml
+
+configMapGenerator:
+  - name: wireguard-config-template
+    namespace: wireguard
+    files:
+      - wg0.conf.tpl=./wg0.conf.tpl
