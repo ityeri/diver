@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minegate
+  namespace: minegate
+  labels:
+    app.kubernetes.io/name: minegate
+    app.kubernetes.io/component: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: minegate
+      app.kubernetes.io/component: proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: minegate
+        app.kubernetes.io/component: proxy
+    spec:
+      containers:
+        - name: gate
+          image: ghcr.io/minekube/gate:latest
+          args: ["run", "-c", "/config/config.yml"]
+          ports:
+            - name: minecraft
+              containerPort: 25565
+              protocol: TCP
+          env:
+            - name: GATE_VELOCITY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: minegate-velocity-secret
+                  key: VELOCITY_SECRET
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 10
+            periodSeconds: 20
+      volumes:
+        - name: config
+          configMap:
+            name: minegate-config
