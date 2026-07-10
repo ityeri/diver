@@ -4,3 +4,20 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./raw-manifests.yaml
+
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: sealed-secrets-controller
+      spec:
+        template:
+          spec:
+            tolerations:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+    target:
+      kind: Deployment
+      name: sealed-secrets-controller
