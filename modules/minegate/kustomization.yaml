@@ -11,4 +11,4 @@ resources:
 configMapGenerator:
   - name: minegate-config
     files:
-      - config.yml
+      - config.yaml
