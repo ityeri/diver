@@ -1,0 +1,29 @@
+config:
+  bind: 0.0.0.0:25565
+  onlineMode: true
+
+  status:
+    motd: |
+      §bdiver
+      §7DIVER!!!!!!!!!!!!!!!!!!!
+
+  # uuid 플레이어 접속 보안 어쩌구용 세팅
+  forwarding:
+    mode: velocity
+    velocitySecret: "${VELOCITY_SECRET}" # ./sealed-secret.yaml 에 박혀있음
+
+  api:
+    enabled: false
+    bind: 0.0.0.0:8080
+
+  servers: {}
+  # for example, like this:
+  # lobby: lobby.mc.svc.cl...local:25565
+  # -> value is kube-recognizable path. not a domain
+  try: {}
+  # - lobby
+
+  forcedHosts: {}
+  # for example, like this:
+  # 'abc.com': ['lobby']
+  # -> 'lobby' is name of server defined in servers section above
