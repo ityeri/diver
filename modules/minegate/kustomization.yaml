@@ -4,7 +4,6 @@ namespace: minegate
 
 resources:
   - ./namespace.yaml
-  - ./configmap.yaml
   - ./sealed-secret.yaml
   - ./deployment.yaml
   - ./gateway.yaml
