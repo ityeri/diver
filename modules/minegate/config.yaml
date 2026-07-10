@@ -16,14 +16,16 @@ config:
     enabled: false
     bind: 0.0.0.0:8080
 
-  servers: {}
+  servers:
+    diverLab: paper-lab.paper-lab.svc.cluster.local:25565
   # for example, like this:
   # lobby: lobby.mc.svc.cl...local:25565
   # -> value is kube-recognizable path. not a domain
   try: {}
   # - lobby
 
-  forcedHosts: {}
+  forcedHosts:
+    'seena.kro.kr': ['diverLab']
   # for example, like this:
   # 'abc.com': ['lobby']
   # -> 'lobby' is name of server defined in servers section above

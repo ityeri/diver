@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: paper-lab-config
+  namespace: paper-lab
+data:
+  paper-global.yml: |
+    proxies:
+      velocity:
+        enabled: true
+        online-mode: true
+        secret: ${CFG_VELOCITY_SECRET}

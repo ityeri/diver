@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: paper-lab
+  namespace: paper-lab
+  labels:
+    app.kubernetes.io/name: paper-lab
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: paper-lab
+  ports:
+    - name: minecraft
+      port: 25565
+      targetPort: 25565
