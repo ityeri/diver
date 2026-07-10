@@ -25,7 +25,7 @@ config:
   # - lobby
 
   forcedHosts:
-    'seena.kro.kr': ['diverLab']
+    "seena.kro.kr": ["diverLab"]
   # for example, like this:
   # 'abc.com': ['lobby']
   # -> 'lobby' is name of server defined in servers section above
