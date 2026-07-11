@@ -25,7 +25,7 @@ spec:
       containers:
         - name: gate
           image: ghcr.io/minekube/gate:latest
-          args: ["run", "-c", "/config/config.yaml"]
+          args: ["-c", "/config/config.yaml"]
           ports:
             - name: minecraft
               containerPort: 25565
