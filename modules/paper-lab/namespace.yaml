@@ -4,5 +4,3 @@ metadata:
   name: paper-lab
   labels:
     app.kubernetes.io/name: paper-lab
-    pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/enforce-version: latest
