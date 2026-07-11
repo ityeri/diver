@@ -18,6 +18,7 @@ config:
 
   servers:
     diverLab: diver-lab.diver-mcs.svc.cluster.local:25565
+    diverRaw5: raw5.diver-mcs.svc.cluster.local:25565
   # for example, like this:
   # lobby: lobby.mc.svc.cl...local:25565
   # -> value is kube-recognizable path. not a domain
@@ -27,6 +28,7 @@ config:
 
   forcedHosts:
     "seena.kro.kr": ["diverLab"]
+    "raw5.seena.kro.kr": ["diverRaw5"]
   # for example, like this:
   # 'abc.com': ['lobby']
   # -> 'lobby' is name of server defined in servers section above
