@@ -1,0 +1,98 @@
+apiVersion: apps/v4
+kind: StatefulSet
+metadata:
+  name: raw5
+  namespace: diver-mcs
+  labels:
+    app.kubernetes.io/name: raw5
+spec:
+  serviceName: raw5
+  replicas: 1 # Paper는 수평 확장 불가, 항상 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: raw5
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: raw5
+    spec:
+      containers:
+        - name: paper
+          image: itzg/minecraft-server:java25
+          ports:
+            - name: minecraft
+              containerPort: 25565
+            - name: rcon
+              containerPort: 25575
+          env:
+            - name: EULA
+              value: "TRUE"
+            - name: TYPE
+              value: "PAPER"
+            - name: VERSION
+              value: "26.2"
+            - name: MEMORY
+              value: "4G"
+            - name: MOTD
+              value: "§b5번째 쌩야생"
+            - name: DIFFICULTY
+              value: "normal"
+            - name: MAX_PLAYERS
+              value: "50"
+            # minegate 에서 인증 함. 원래 벨로 쓸때 리프 서버에선 online mode 끄는거랑 같은 이치
+            - name: ONLINE_MODE
+              value: "FALSE"
+            # paper-global.yml 안의 ${CFG_...} 치환 활성화
+            - name: REPLACE_ENV_VARIABLES
+              value: "TRUE"
+            - name: ENV_VARIABLE_PREFIX
+              value: "CFG_"
+            - name: CFG_VELOCITY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: raw5-secrets
+                  key: VELOCITY_SECRET
+            - name: ENABLE_RCON
+              value: "true"
+            - name: RCON_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: raw5-secrets
+                  key: RCON_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config-override
+              mountPath: /config
+              readOnly: true
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              cpu: "4"
+              memory: 4Gi
+          readinessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 3
+      volumes:
+        - name: config-override
+          configMap:
+            name: raw5-config
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "local-path"
+        resources:
+          requests:
+            storage: 8Gi

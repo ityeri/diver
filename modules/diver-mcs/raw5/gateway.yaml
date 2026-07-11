@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: raw5
+  namespace: diver-mcs
+  labels:
+    app.kubernetes.io/name: raw5
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: raw5
+  ports:
+    - name: minecraft
+      port: 25565
+      targetPort: 25565

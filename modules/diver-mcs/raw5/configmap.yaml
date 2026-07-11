@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: raw5-config
+  namespace: diver-mcs
+data:
+  paper-global.yml: |
+    proxies:
+      velocity:
+        enabled: true
+        online-mode: true
+        secret: ${CFG_VELOCITY_SECRET}
