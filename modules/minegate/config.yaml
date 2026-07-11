@@ -21,7 +21,8 @@ config:
   # for example, like this:
   # lobby: lobby.mc.svc.cl...local:25565
   # -> value is kube-recognizable path. not a domain
-  try: {}
+  try:
+    - diverLab
   # - lobby
 
   forcedHosts:
