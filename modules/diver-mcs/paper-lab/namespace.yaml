@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: paper-lab
-  labels:
-    app.kubernetes.io/name: paper-lab

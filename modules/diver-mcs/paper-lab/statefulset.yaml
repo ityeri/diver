@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: paper-lab
-  namespace: paper-lab
+  name: diver-lab
+  namespace: diver-mcs
   labels:
-    app.kubernetes.io/name: paper-lab
+    app.kubernetes.io/name: diver-lab
 spec:
-  serviceName: paper-lab
+  serviceName: diver-lab
   replicas: 1 # Paper는 수평 확장 불가, 항상 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: paper-lab
+      app.kubernetes.io/name: diver-lab
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: paper-lab
+        app.kubernetes.io/name: diver-lab
     spec:
       containers:
         - name: paper
@@ -50,14 +50,14 @@ spec:
             - name: CFG_VELOCITY_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: paper-lab-secrets
+                  name: diver-lab-secrets
                   key: VELOCITY_SECRET
             - name: ENABLE_RCON
               value: "true"
             - name: RCON_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: paper-lab-secrets
+                  name: diver-lab-secrets
                   key: RCON_PASSWORD
           volumeMounts:
             - name: data
@@ -86,7 +86,7 @@ spec:
       volumes:
         - name: config-override
           configMap:
-            name: paper-lab-config
+            name: diver-lab-config
   volumeClaimTemplates:
     - metadata:
         name: data
