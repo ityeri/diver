@@ -17,7 +17,7 @@ config:
     bind: 0.0.0.0:8080
 
   servers:
-    diverLab: paper-lab.paper-lab.svc.cluster.local:25565
+    diverLab: diver-mcs.diver-lab.svc.cluster.local:25565
   # for example, like this:
   # lobby: lobby.mc.svc.cl...local:25565
   # -> value is kube-recognizable path. not a domain
