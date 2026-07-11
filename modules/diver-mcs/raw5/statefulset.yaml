@@ -59,6 +59,8 @@ spec:
                 secretKeyRef:
                   name: raw5-secrets
                   key: RCON_PASSWORD
+            - name: VIEW_DISTANCE
+              value: "32"
           volumeMounts:
             - name: data
               mountPath: /data
