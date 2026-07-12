@@ -10,3 +10,5 @@ data:
         enabled: true
         online-mode: true
         secret: ${CFG_VELOCITY_SECRET}
+    chunk-saver:
+      auto-save-interval: 1200
