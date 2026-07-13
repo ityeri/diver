@@ -17,7 +17,6 @@ spec:
         app.kubernetes.io/name: diver-lab
     spec:
       containers:
-
         - name: paper
           image: itzg/minecraft-server:java25
           ports:
