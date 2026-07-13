@@ -19,27 +19,23 @@ spec:
     spec:
       initContainers:
         - name: install-graalvm
-          image: alpine:3.20
+          image: ghcr.io/graalvm/jdk-community:25
           command:
             - sh
             - -c
             - |
               set -e
-              apk add --no-cache curl tar
-              echo "Downloading GraalVM JDK 25..."
-              curl -fsSL -o /tmp/graalvm.tar.gz \
-                https://download.oracle.com/graalvm/25/latest/graalvm-jdk-25_linux-x64_bin.tar.gz
+              echo "Copying GraalVM from container image..."
               mkdir -p /jdk/graalvm
-              tar -xzf /tmp/graalvm.tar.gz -C /jdk/graalvm --strip-components=1
-              rm /tmp/graalvm.tar.gz
-              echo "GraalVM installed to /jdk/graalvm"
+              cp -a /opt/graalvm/* /jdk/graalvm/
+              echo "GraalVM copied to /jdk/graalvm"
               /jdk/graalvm/bin/java -version
           volumeMounts:
             - name: jdk
               mountPath: /jdk
       
       containers:
-        - name: paper
+        - name: paper-server
           image: itzg/minecraft-server:java25
           ports:
             - name: minecraft
