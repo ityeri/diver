@@ -17,8 +17,28 @@ spec:
         app.kubernetes.io/name: raw5
 
     spec:
+      initContainers:
+        - name: install-graalvm
+          image: alpine:3.20
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              apk add --no-cache curl tar
+              echo "Downloading GraalVM JDK 25..."
+              curl -fsSL -o /tmp/graalvm.tar.gz \
+                https://download.oracle.com/graalvm/25/latest/graalvm-jdk-25_linux-x64_bin.tar.gz
+              mkdir -p /jdk/graalvm
+              tar -xzf /tmp/graalvm.tar.gz -C /jdk/graalvm --strip-components=1
+              rm /tmp/graalvm.tar.gz
+              echo "GraalVM installed to /jdk/graalvm"
+              /jdk/graalvm/bin/java -version
+          volumeMounts:
+            - name: jdk
+              mountPath: /jdk
+      
       containers:
-
         - name: paper
           image: itzg/minecraft-server:java25
           ports:
@@ -66,12 +86,19 @@ spec:
               value: "32"
             - name: TICKS_PER_AUTOSAVE
               value: "1200"
+            # 지랄관련 설정
+            - name: JAVA_HOME
+              value: /jdk/graalvm
+            - name: USE_MEOWICE_GRAALVM_FLAGS # 지랄 최적화 플래그
+              value: "true"
 
           volumeMounts:
             - name: data
               mountPath: /data
             - name: config-override
               mountPath: /config
+            - name: jdk # initContainers 쪽에서 받은 지랄을 마운트 해줘야됨
+              mountPath: /jdk
               readOnly: true
 
           resources:
