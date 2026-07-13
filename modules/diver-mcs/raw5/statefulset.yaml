@@ -126,6 +126,8 @@ spec:
         - name: config-override
           configMap:
             name: raw5-config
+        - name: jdk
+          emptyDir: {}
 
   volumeClaimTemplates:
     - metadata:
