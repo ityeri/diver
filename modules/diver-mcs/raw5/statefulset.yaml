@@ -27,7 +27,7 @@ spec:
               set -e
               echo "Copying GraalVM from container image..."
               mkdir -p /jdk/graalvm
-              cp -a /opt/graalvm/* /jdk/graalvm/
+              cp -a ${JAVA_HOME}/* /jdk/graalvm/
               echo "GraalVM copied to /jdk/graalvm"
               /jdk/graalvm/bin/java -version
           volumeMounts:
