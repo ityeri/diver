@@ -12,4 +12,3 @@ configMapGenerator:
   - name: minegate-config
     files:
       - ./config.yaml
-      - ./diver-mcs-icon.png
