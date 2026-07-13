@@ -17,6 +17,7 @@ spec:
         app.kubernetes.io/name: diver-lab
     spec:
       containers:
+
         - name: paper
           image: itzg/minecraft-server:java25
           ports:
@@ -24,6 +25,7 @@ spec:
               containerPort: 25565
             - name: rcon
               containerPort: 25575
+
           env:
             - name: EULA
               value: "TRUE"
@@ -59,12 +61,16 @@ spec:
                 secretKeyRef:
                   name: diver-lab-secrets
                   key: RCON_PASSWORD
+            - name: TICKS_PER_AUTOSAVE
+              value: "1200"
+
           volumeMounts:
             - name: data
               mountPath: /data
             - name: config-override
               mountPath: /config
               readOnly: true
+
           resources:
             requests:
               cpu: "1"
@@ -72,21 +78,25 @@ spec:
             limits:
               cpu: "4"
               memory: 4Gi
+
           readinessProbe:
             tcpSocket:
               port: 25565
             initialDelaySeconds: 60
             periodSeconds: 10
+
           livenessProbe:
             tcpSocket:
               port: 25565
             initialDelaySeconds: 60
             periodSeconds: 20
             failureThreshold: 3
+
       volumes:
         - name: config-override
           configMap:
             name: diver-lab-config
+
   volumeClaimTemplates:
     - metadata:
         name: data

@@ -15,8 +15,10 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: raw5
+
     spec:
       containers:
+
         - name: paper
           image: itzg/minecraft-server:java25
           ports:
@@ -24,6 +26,7 @@ spec:
               containerPort: 25565
             - name: rcon
               containerPort: 25575
+
           env:
             - name: EULA
               value: "TRUE"
@@ -61,12 +64,16 @@ spec:
                   key: RCON_PASSWORD
             - name: VIEW_DISTANCE
               value: "32"
+            - name: TICKS_PER_AUTOSAVE
+              value: "1200"
+
           volumeMounts:
             - name: data
               mountPath: /data
             - name: config-override
               mountPath: /config
               readOnly: true
+
           resources:
             requests:
               cpu: "1"
@@ -74,21 +81,25 @@ spec:
             limits:
               cpu: "4"
               memory: 8Gi
+
           readinessProbe:
             tcpSocket:
               port: 25565
             initialDelaySeconds: 60
             periodSeconds: 10
+
           livenessProbe:
             tcpSocket:
               port: 25565
             initialDelaySeconds: 60
             periodSeconds: 20
             failureThreshold: 3
+
       volumes:
         - name: config-override
           configMap:
             name: raw5-config
+
   volumeClaimTemplates:
     - metadata:
         name: data
