@@ -12,3 +12,4 @@ configMapGenerator:
   - name: minegate-config
     files:
       - config.yaml
+      - server-icon.png

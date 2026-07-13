@@ -6,6 +6,7 @@ config:
     motd: |
       §bdiver
       §7DIVER!!!!!!!!!!!!!!!!!!!
+    favicon: /config/server-icon.png
 
   # uuid 플레이어 접속 보안 어쩌구용 세팅
   forwarding:
