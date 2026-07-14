@@ -7,7 +7,7 @@ data:
   paper-global.yml: |
     proxies:
       velocity:
-        enabled: false
+        enabled: true
         online-mode: true
         secret: ${CFG_VELOCITY_SECRET}
     chunk-saver:
