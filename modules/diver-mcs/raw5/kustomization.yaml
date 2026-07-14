@@ -6,3 +6,4 @@ resources:
   - ./configmap.yaml
   - ./statefulset.yaml
   - ./gateway.yaml
+  - ./temp-gateway.yaml
