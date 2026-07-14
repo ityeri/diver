@@ -61,7 +61,7 @@ spec:
               value: "50"
             # minegate 에서 인증 함. 원래 벨로 쓸때 리프 서버에선 online mode 끄는거랑 같은 이치
             - name: ONLINE_MODE
-              value: "TRUE"
+              value: "FALSE"
             # paper-global.yml 안의 ${CFG_...} 치환 활성화
             - name: REPLACE_ENV_VARIABLES
               value: "TRUE"
