@@ -7,9 +7,8 @@ data:
   paper-global.yml: |
     proxies:
       velocity:
-        enabled: true
+        enabled: false
         online-mode: true
         secret: ${CFG_VELOCITY_SECRET}
-        allow-direct-connection: true
     chunk-saver:
       auto-save-interval: 1200
