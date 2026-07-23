@@ -12,4 +12,4 @@ data:
         secret: ${CFG_VELOCITY_SECRET}
     chunk-saver:
       auto-save-interval: 1200
-    allow-permanent-block-break-exploits
+    allow-permanent-block-break-exploits: true
