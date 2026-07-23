@@ -34,7 +34,7 @@ spec:
           volumeMounts:
             - name: jdk
               mountPath: /jdk
-      
+
       containers:
         - name: paper-server
           image: itzg/minecraft-server:java25
@@ -80,7 +80,7 @@ spec:
                   name: raw5-secrets
                   key: RCON_PASSWORD
             - name: VIEW_DISTANCE
-              value: "32"
+              value: "512"
             - name: TICKS_PER_AUTOSAVE
               value: "1200"
             # 지랄관련 설정
@@ -88,7 +88,6 @@ spec:
               value: /jdk/graalvm
             - name: USE_MEOWICE_GRAALVM_FLAGS # 지랄 최적화 플래그
               value: "true"
-
           volumeMounts:
             - name: data
               mountPath: /data
