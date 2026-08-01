@@ -16,6 +16,15 @@ spec:
       labels:
         app.kubernetes.io/name: diver-lab
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - node-00-k8scp
       containers:
         - name: paper
           image: itzg/minecraft-server:java25

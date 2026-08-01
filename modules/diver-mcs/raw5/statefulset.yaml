@@ -17,6 +17,15 @@ spec:
         app.kubernetes.io/name: raw5
 
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - node-00-k8scp
       initContainers:
         - name: install-graalvm
           image: ghcr.io/graalvm/jdk-community:25
