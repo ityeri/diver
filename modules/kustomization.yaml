@@ -4,3 +4,4 @@ resources:
   - ./wireguard/
   - ./minegate/
   - ./diver-mcs/
+  - ./piepy/
