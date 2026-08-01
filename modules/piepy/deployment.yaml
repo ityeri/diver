@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: piepy
+  namespace: piepy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: piepy
+  template:
+    metadata:
+      labels:
+        app: piepy
+    spec:
+      containers:
+        - name: piepy
+          image: ghcr.io/ityeri/piepy:develop # {"$imagepolicy": "flux-system:piepy"}
+          imagePullPolicy: Always
+          env:
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: piepy-secret
+                  key: BOT_TOKEN
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
