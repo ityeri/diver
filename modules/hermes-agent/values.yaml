@@ -29,6 +29,7 @@ env:
   DISCORD_ALLOWED_USERS: "Referenced from sealed_secret.yaml"
   DISCORD_HOME_CHANNEL: "Referenced from sealed_secret.yaml"
   WHATSAPP_ENABLED: "false"
+  AGENT_BROWSER_ARGS: "--no-sandbox"
 
 secrets:
   existingSecret: hermes-agent-secrets

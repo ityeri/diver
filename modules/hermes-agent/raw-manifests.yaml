@@ -248,6 +248,8 @@ spec:
               value: "/opt/data"
             - name: HOME
               value: "/opt/data/home"
+            - name: AGENT_BROWSER_ARGS
+              value: "--no-sandbox"
             - name: DISCORD_ALLOWED_USERS
               value: "Referenced from sealed_secret.yaml"
             - name: DISCORD_HOME_CHANNEL
