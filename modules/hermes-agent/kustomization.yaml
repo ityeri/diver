@@ -54,6 +54,36 @@ patches:
       kind: Deployment
       name: hermes-workspace
 
+  # Allow s6-overlay to initialize as root then drop to uid 1000
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: hermes-agent
+      spec:
+        template:
+          spec:
+            securityContext:
+              runAsUser: 0
+              runAsGroup: 0
+              runAsNonRoot: false
+              fsGroup: 1000
+            containers:
+              - name: hermes-agent
+                securityContext:
+                  allowPrivilegeEscalation: true
+                  readOnlyRootFilesystem: false
+                  capabilities:
+                    drop: []
+                    add:
+                      - CHOWN
+                      - SETUID
+                      - SETGID
+                      - DAC_OVERRIDE
+    target:
+      kind: Deployment
+      name: hermes-agent
+
   # Discord secret value patch for hermes-agent raw manifests
   - patch: |-
       apiVersion: apps/v1
