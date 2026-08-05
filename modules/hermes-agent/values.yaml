@@ -5,7 +5,7 @@ config:
   values:
     model:
       default: deepseek-v4-flash
-      provider: openai
+      provider: deepseek
       base_url: https://api.deepseek.com/v1
     agent:
       max_turns: 90

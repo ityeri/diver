@@ -118,7 +118,7 @@ data:
     model:
       base_url: https://api.deepseek.com/v1
       default: deepseek-v4-flash
-      provider: openai
+      provider: deepseek
     security:
       redact_secrets: true
       tirith_enabled: true
@@ -183,7 +183,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/part-of: hermes-agent
       annotations:
-        checksum/config: afe2a8284cf2571972a81d26c36303c06a01d1149dc485d1fb96dbce88652a47
+        checksum/config: 1ef86cd699fd17152825aaceb874d5009bf1ab29fcbda42378f0fa84dd51a13a
     spec:
       serviceAccountName: hermes-agent
       automountServiceAccountToken: false
