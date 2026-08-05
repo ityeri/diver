@@ -58,7 +58,7 @@ extraVolumes:
   - name: workspace-ssh-key
     secret:
       secretName: hermes-workspace-ssh
-      defaultMode: 0640
+      defaultMode: 0644
       items:
         - key: id_ed25519
           path: id_ed25519
