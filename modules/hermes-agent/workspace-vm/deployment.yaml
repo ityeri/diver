@@ -19,9 +19,13 @@ spec:
         app.kubernetes.io/name: hermes-workspace
         app.kubernetes.io/component: workspace-vm
     spec:
+      securityContext:
+        runAsNonRoot: false
       containers:
         - name: workspace
           image: lscr.io/linuxserver/openssh-server:latest
+          securityContext:
+            runAsUser: 0
           env:
             - name: PUID
               value: "1000"
