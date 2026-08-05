@@ -26,6 +26,13 @@ spec:
           image: lscr.io/linuxserver/openssh-server:latest
           securityContext:
             runAsUser: 0
+            allowPrivilegeEscalation: true
+            capabilities:
+              add:
+                - CHOWN
+                - SETUID
+                - SETGID
+                - DAC_OVERRIDE
           env:
             - name: PUID
               value: "1000"
