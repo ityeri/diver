@@ -1,0 +1,66 @@
+config:
+  values:
+    model:
+      default: deepseek-v4-flash
+      provider: auto
+      base_url: https://api.deepseek.com/v1
+    agent:
+      max_turns: 90
+      gateway_timeout: 1800
+    terminal:
+      backend: ssh
+      ssh_host: hermes-workspace.hermes-agent.svc.cluster.local
+      ssh_user: agent
+      ssh_port: 22
+      ssh_key: /run/secrets/workspace-ssh/id_ed25519
+      cwd: /config/workspace
+      timeout: 300
+    browser:
+      inactivity_timeout: 120
+      command_timeout: 30
+      allow_private_urls: false
+
+env:
+  # Discord-related variables are in the kustomization.yaml file as a patch
+  # That patch will be applied to the raw-manifests.yaml file
+  DISCORD_ALLOWED_USERS: "Referenced from sealed_secret.yaml"
+  DISCORD_HOME_CHANNEL: "Referenced from sealed_secret.yaml"
+  WHATSAPP_ENABLED: "false"
+
+secrets:
+  existingSecret: hermes-agent-secrets
+
+persistence:
+  enabled: true
+  storageClass: local-path
+  size: 5Gi
+  accessMode: ReadWriteOnce
+
+browser:
+  shm:
+    enabled: true
+    sizeLimit: 1Gi
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: "2"
+    memory: 4Gi
+
+tolerations: []
+
+extraVolumes:
+  - name: workspace-ssh-key
+    secret:
+      secretName: hermes-workspace-ssh
+      defaultMode: 0600
+      items:
+        - key: id_ed25519
+          path: id_ed25519
+
+extraVolumeMounts:
+  - name: workspace-ssh-key
+    mountPath: /run/secrets/workspace-ssh
+    readOnly: true

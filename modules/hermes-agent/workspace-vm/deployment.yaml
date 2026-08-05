@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-workspace
+  namespace: hermes-agent
+  labels:
+    app.kubernetes.io/name: hermes-workspace
+    app.kubernetes.io/component: workspace-vm
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hermes-workspace
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hermes-workspace
+        app.kubernetes.io/component: workspace-vm
+    spec:
+      containers:
+        - name: workspace
+          image: lscr.io/linuxserver/openssh-server:latest
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: USER_NAME
+              value: agent
+            - name: SUDO_ACCESS
+              value: "true"
+            - name: PASSWORD_ACCESS
+              value: "false"
+            - name: PUBLIC_KEY_FILE
+              value: /run/secrets/ssh/authorized_keys
+          ports:
+            - name: ssh
+              containerPort: 2222
+              protocol: TCP
+          volumeMounts:
+            - name: workspace-data
+              mountPath: /config
+            - name: ssh-pubkey
+              mountPath: /run/secrets/ssh
+              readOnly: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+      volumes:
+        - name: workspace-data
+          persistentVolumeClaim:
+            claimName: hermes-workspace-data
+        - name: ssh-pubkey
+          secret:
+            secretName: hermes-workspace-ssh
+            items:
+              - key: authorized_keys
+                path: authorized_keys

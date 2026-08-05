@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
   - ./wireguard/
   - ./minegate/
+  - ./hermes-agent/
   - ./diver-mcs/
   - ./piepy/
