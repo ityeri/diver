@@ -325,7 +325,7 @@ spec:
             sizeLimit: "1Gi"
         - name: workspace-ssh-key
           secret:
-            defaultMode: 384
+            defaultMode: 416
             items:
             - key: id_ed25519
               path: id_ed25519
