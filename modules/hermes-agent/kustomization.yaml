@@ -68,6 +68,10 @@ patches:
               runAsGroup: 0
               runAsNonRoot: false
               fsGroup: 1000
+            initContainers:
+              - name: bootstrap-config
+                securityContext:
+                  readOnlyRootFilesystem: false
             containers:
               - name: hermes-agent
                 securityContext:
