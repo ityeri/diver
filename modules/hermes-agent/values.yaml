@@ -1,3 +1,6 @@
+image:
+  tag: "v2026.8.3"
+
 config:
   values:
     model:
