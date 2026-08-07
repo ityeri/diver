@@ -82,10 +82,10 @@ spec:
           resources:
             requests:
               cpu: 500m
-              memory: 2Gi
+              memory: 4Gi
             limits:
               cpu: "4"
-              memory: 4Gi
+              memory: 6Gi
 
           readinessProbe:
             tcpSocket:
