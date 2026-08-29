@@ -13,7 +13,7 @@ config:
     mode: velocity
     velocitySecret: "${VELOCITY_SECRET}" # ./sealed-secret.yaml 에 박혀있음
 
-  # bedrock cross-play: managed geyserlite (UDP 19132)
+  # 베드락도 들여보내는 managed geyserlite (UDP 19132)
   bedrock: true
 
   api:
