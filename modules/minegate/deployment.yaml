@@ -24,12 +24,15 @@ spec:
           effect: NoSchedule
       containers:
         - name: gate
-          image: ghcr.io/minekube/gate:latest
+          image: ghcr.io/minekube/gate/jre:latest
           args: ["-c", "/config/config.yaml"]
           ports:
             - name: minecraft
               containerPort: 25565
               protocol: TCP
+            - name: bedrock
+              containerPort: 19132
+              protocol: UDP
           env:
             - name: GATE_VELOCITY_SECRET
               valueFrom:
@@ -43,10 +46,10 @@ spec:
           resources:
             requests:
               cpu: 500m
-              memory: 256Mi
+              memory: 512Mi
             limits:
               cpu: 2000m
-              memory: 512Mi
+              memory: 2Gi
           readinessProbe:
             tcpSocket:
               port: 25565

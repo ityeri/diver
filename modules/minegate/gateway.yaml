@@ -20,3 +20,7 @@ spec:
       port: 25565
       targetPort: 25565
       protocol: TCP
+    - name: bedrock
+      port: 19132
+      targetPort: 19132
+      protocol: UDP
