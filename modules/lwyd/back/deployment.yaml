@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: lwyd-back
-          image: ghcr.io/ityeri/lwyd-back:develop
+          image: ghcr.io/ityeri/lwyd_back:develop
           imagePullPolicy: Always
           env:
             - name: SERVER_HOST
