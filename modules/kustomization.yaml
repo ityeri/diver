@@ -6,3 +6,4 @@ resources:
   - ./hermes-agent/
   - ./diver-mcs/
   - ./piepy/
+  - ./lwyd/

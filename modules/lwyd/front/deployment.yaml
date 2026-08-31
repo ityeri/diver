@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lwyd-front
+  namespace: lwyd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lwyd-front
+  template:
+    metadata:
+      labels:
+        app: lwyd-front
+    spec:
+      containers:
+        - name: lwyd-front
+          image: ghcr.io/ityeri/lwyd-webfront:develop
+          imagePullPolicy: Always
+          env:
+            - name: API_HOST
+              value: "lwyd-back"
+            - name: API_PORT
+              value: "8000"
+            - name: NGINX_ENVSUBST_FILTER
+              value: "$API_HOST $API_PORT"
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
