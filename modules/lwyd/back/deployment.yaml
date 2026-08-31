@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lwyd-back
+  namespace: lwyd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lwyd-back
+  template:
+    metadata:
+      labels:
+        app: lwyd-back
+    spec:
+      containers:
+        - name: lwyd-back
+          image: ghcr.io/ityeri/lwyd-back:develop
+          imagePullPolicy: Always
+          env:
+            - name: SERVER_HOST
+              value: "0.0.0.0"
+            - name: SERVER_PORT
+              value: "8000"
+            - name: DOWNLOAD_DIR
+              value: "/app/downloads"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: SERVER_ALLOW_ORIGINS
+              value: ""
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: downloads
+              mountPath: /app/downloads
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+      volumes:
+        - name: downloads
+          emptyDir: {}
