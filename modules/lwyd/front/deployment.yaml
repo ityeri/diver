@@ -23,7 +23,7 @@ spec:
             - name: API_PORT
               value: "8000"
             - name: NGINX_ENVSUBST_FILTER
-              value: "$API_HOST $API_PORT"
+              value: "^API_"
           ports:
             - containerPort: 80
           resources:
