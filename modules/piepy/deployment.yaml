@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: piepy
-          image: ghcr.io/ityeri/piepy:develop # {"$imagepolicy": "flux-system:piepy"}
+          image: ghcr.io/ityeri/piepy:develop
           imagePullPolicy: Always
           env:
             - name: BOT_TOKEN
