@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: image-watch
+  namespace: image-watch
+data:
+  watch.py: |
+    #!/usr/bin/env python3
+    # image-watch: moving-tag (:develop) rollout watcher for the diver cluster.
+    # Polls GHCR for the index digest of each tracked image; when it differs
+    # from the last digest we acted on, rollout-restarts the deployment.
+    # The app deployments use imagePullPolicy: Always, so restarted pods
+    # re-pull the ref and pick up the new digest -- no git commit needed.
+    # The last-seen digest lives in a watcher-owned deployment annotation,
+    # which Flux never manages, so GitOps state stays untouched.
+    import json
+    import ssl
+    import sys
+    import time
+    import urllib.request
+
+    API = "https://kubernetes.default.svc"
+    SA_DIR = "/var/run/secrets/kubernetes.io/serviceaccount"
+    TOKEN = open(SA_DIR + "/token").read().strip()
+    CTX = ssl.create_default_context(cafile=SA_DIR + "/ca.crt")
+    ANNOT = "image-watch.ityeri.dev/last-digest"
+
+    # (namespace, deployment, registry repo, moving tag)
+    APPS = [
+        ("piepy", "piepy", "ghcr.io/ityeri/piepy", "develop"),
+        ("lwyd", "lwyd-back", "ghcr.io/ityeri/lwyd_back", "develop"),
+        ("lwyd", "lwyd-front", "ghcr.io/ityeri/lwyd-webfront", "develop"),
+    ]
+
+    def api(method, path, body=None):
+        data = json.dumps(body).encode() if body is not None else None
+        req = urllib.request.Request(
+            API + path, method=method, data=data,
+            headers={"Authorization": "Bearer " + TOKEN,
+                     "Content-Type": "application/merge-patch+json"})
+        with urllib.request.urlopen(req, context=CTX, timeout=20) as resp:
+            return json.loads(resp.read().decode()) if resp.status != 204 else None
+
+    def registry_digest(repo, tag):
+        # anonymous token dance for public GHCR packages
+        tok = json.loads(urllib.request.urlopen(
+            "https://ghcr.io/token?scope=repository:" + repo + ":pull",
+            timeout=20).read().decode())["token"]
+        req = urllib.request.Request(
+            "https://ghcr.io/v2/" + repo + "/manifests/" + tag, method="HEAD",
+            headers={"Authorization": "Bearer " + tok,
+                     "Accept": "application/vnd.oci.image.index.v1+json, "
+                               "application/vnd.docker.distribution.manifest.list.v2+json, "
+                               "application/vnd.docker.distribution.manifest.v2+json"})
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            return resp.headers["Docker-Content-Digest"]
+
+    def main():
+        rc = 0
+        for ns, deploy, repo, tag in APPS:
+            try:
+                latest = registry_digest(repo, tag)
+                dep = api("GET", "/apis/apps/v1/namespaces/%s/deployments/%s" % (ns, deploy))
+                stored = (dep.get("metadata", {}).get("annotations") or {}).get(ANNOT)
+                if stored == latest:
+                    print("[ok] %s/%s up to date (%s)" % (ns, deploy, latest[:19]))
+                    continue
+                stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                api("PATCH", "/apis/apps/v1/namespaces/%s/deployments/%s" % (ns, deploy),
+                    {"metadata": {"annotations": {ANNOT: latest}},
+                     "spec": {"template": {"metadata": {
+                         "annotations": {"kubectl.kubernetes.io/restartedAt": stamp}}}}})
+                print("[rollout] %s/%s %s -> %s" % (ns, deploy, (stored or "none")[:19], latest[:19]))
+            except Exception as exc:  # network/registry hiccup: log and retry next tick
+                print("[error] %s/%s: %r" % (ns, deploy, exc))
+                rc = 1
+        return rc
+
+    if __name__ == "__main__":
+        sys.exit(main())

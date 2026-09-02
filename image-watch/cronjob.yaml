@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: image-watch
+  namespace: image-watch
+spec:
+  schedule: "*/3 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 120
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          serviceAccountName: image-watch
+          restartPolicy: Never
+          containers:
+            - name: watch
+              image: python:3.12-alpine
+              imagePullPolicy: IfNotPresent
+              command: ["python3", "/watch/watch.py"]
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  cpu: 100m
+                  memory: 128Mi
+              volumeMounts:
+                - name: script
+                  mountPath: /watch
+          volumes:
+            - name: script
+              configMap:
+                name: image-watch
+                defaultMode: 0555
