@@ -15,6 +15,7 @@ config:
 
   # 베드락도 들여보내는 managed geyserlite (UDP 19132)
   bedrock:
+    enabled: true
     managed:
       enabled: true
       # geyserlite가 생성 config에 넣는 java.use-proxy-protocol은 구 스키마 키라 번들 Geyser(config-version 8)가 무시함
