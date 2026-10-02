@@ -13,8 +13,12 @@ config:
     mode: velocity
     velocitySecret: "${VELOCITY_SECRET}" # ./sealed-secret.yaml 에 박혀있음
 
-  # 베드락도 들여보내는 managed geyserlite (UDP 19132)
-  bedrock: true
+  # 베드락도 들여보내는 managed geyser (UDP 19132)
+  # native geyserlite 런타임이 arm64(node-01) 노드에서 로그인 단계에 죽어서 java 엔진으로 우회
+  bedrock:
+    managed:
+      enabled: true
+      engine: java
 
   api:
     enabled: false
