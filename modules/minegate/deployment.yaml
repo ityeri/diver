@@ -22,6 +22,16 @@ spec:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
           effect: NoSchedule
+      # bedrock native 런타임(geyserlite)이 amd64 전용이라 x86 노드에 고정
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - node-00-k8scp
       containers:
         - name: gate
           image: ghcr.io/minekube/gate/jre:latest
