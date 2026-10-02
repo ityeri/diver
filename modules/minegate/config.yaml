@@ -14,8 +14,15 @@ config:
     velocitySecret: "${VELOCITY_SECRET}" # ./sealed-secret.yaml 에 박혀있음
 
   # 베드락도 들여보내는 managed geyserlite (UDP 19132)
-  # geyserlite는 아키텍처별 native 바이너리라 arm64(node-01)에서 로그인 단계에 실패함 -> amd64 노드 고정 (deployment.yaml affinity)
-  bedrock: true
+  bedrock:
+    managed:
+      enabled: true
+      # geyserlite가 생성 config에 넣는 java.use-proxy-protocol은 구 스키마 키라 번들 Geyser(config-version 8)가 무시함
+      # -> Gate Bedrock 리스너(proxyproto REQUIRE)가 요구하는 PROXY 헤더가 안 나가서 무로그로 끊기므로 새 스키마 키를 켬
+      configOverrides:
+        advanced:
+          java:
+            use-haproxy-protocol: true
 
   api:
     enabled: false
