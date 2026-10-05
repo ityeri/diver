@@ -6,7 +6,6 @@ metadata:
   labels:
     app.kubernetes.io/name: raw5
 spec:
-  clusterIP: None
   selector:
     app.kubernetes.io/name: raw5
   ports:

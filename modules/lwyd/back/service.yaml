@@ -6,11 +6,10 @@ metadata:
   labels:
     app.kubernetes.io/name: lwyd-back
 spec:
-  type: ClusterIP
   selector:
     app: lwyd-back
   ports:
     - name: http
       port: 8000
-      targetPort: 8000
+      targetPort: http
       protocol: TCP

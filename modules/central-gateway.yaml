@@ -1,0 +1,25 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: central-gateway
+  namespace: default
+  annotations:
+    lbipam.cilium.io/sharing-key: central-vip
+    lbipam.cilium.io/sharing-cross-namespace: "*"
+spec:
+  gatewayClassName: cilium
+  listeners:
+    - name: minegate-je
+      port: 25565
+      protocol: TCP
+    - name: minegate-be
+      port: 19132
+      protocol: UDP
+
+    - name: wireguard
+      port: 51820
+      protocol: UDP
+
+    - name: lwyd
+      port: 80
+      protocol: HTTP

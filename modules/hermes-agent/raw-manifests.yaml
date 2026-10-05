@@ -251,9 +251,9 @@ spec:
             - name: AGENT_BROWSER_ARGS
               value: "--no-sandbox"
             - name: DISCORD_ALLOWED_USERS
-              value: "Referenced from sealed_secret.yaml"
+              value: "Referenced from sealed-secret.yaml"
             - name: DISCORD_HOME_CHANNEL
-              value: "Referenced from sealed_secret.yaml"
+              value: "Referenced from sealed-secret.yaml"
             - name: GATEWAY_ALLOW_ALL_USERS
               value: "false"
             - name: HERMES_HUMAN_DELAY_MAX_MS
@@ -286,7 +286,7 @@ spec:
               value: "false"
           envFrom:
             - secretRef:
-                name: hermes-agent-secrets
+                name: hermes-agent-secret
           resources:
             limits:
               cpu: "2"
@@ -329,7 +329,7 @@ spec:
           secret:
             defaultMode: 420
             items:
-            - key: id_ed25519
+            - key: idEd25519
               path: id_ed25519
             secretName: hermes-workspace-ssh
       terminationGracePeriodSeconds: 120

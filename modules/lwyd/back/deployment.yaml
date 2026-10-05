@@ -29,7 +29,8 @@ spec:
             - name: SERVER_ALLOW_ORIGINS
               value: ""
           ports:
-            - containerPort: 8000
+            - name: http
+              containerPort: 8000
           volumeMounts:
             - name: downloads
               mountPath: /app/downloads

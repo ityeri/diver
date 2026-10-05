@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minegate
+  namespace: minegate
+spec:
+  selector:
+    app.kubernetes.io/name: minegate
+    app.kubernetes.io/component: proxy
+  ports:
+    - name: java
+      port: 25565
+      targetPort: je
+      protocol: TCP
+
+    - name: bedrock
+      port: 19132
+      targetPort: be
+      protocol: UDP

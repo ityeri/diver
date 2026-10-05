@@ -30,7 +30,7 @@ spec:
             - name: SERVER_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: wireguard-server-key
+                  name: wireguard-secret
                   key: privatekey
           volumeMounts:
             - name: config-template

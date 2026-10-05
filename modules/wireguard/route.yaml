@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: wireguard
+  namespace: wireguard
+spec:
+  parentRefs:
+    - name: central-gateway
+      namespace: default
+      group: gateway.networking.k8s.io
+      kind: Gateway
+  rules:
+    - backendRefs:
+        - name: wireguard
+          kind: Service
+          port: 51820

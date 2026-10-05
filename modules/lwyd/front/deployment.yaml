@@ -25,7 +25,9 @@ spec:
             - name: NGINX_ENVSUBST_FILTER
               value: "^API_"
           ports:
-            - containerPort: 80
+            - name: http
+              protocol: HTTP
+              containerPort: 80
           resources:
             requests:
               cpu: 50m

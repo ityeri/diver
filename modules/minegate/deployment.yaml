@@ -12,47 +12,43 @@ spec:
     matchLabels:
       app.kubernetes.io/name: minegate
       app.kubernetes.io/component: proxy
+
   template:
     metadata:
       labels:
         app.kubernetes.io/name: minegate
         app.kubernetes.io/component: proxy
+
     spec:
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
           effect: NoSchedule
-      # bedrock native 런타임(geyserlite)이 amd64 전용이라 x86 노드에 고정
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/hostname
-                    operator: In
-                    values:
-                      - node-00-k8scp
       containers:
         - name: gate
           image: ghcr.io/minekube/gate/jre:latest
           args: ["-c", "/config/config.yaml"]
+
           ports:
-            - name: minecraft
+            - name: je
               containerPort: 25565
               protocol: TCP
-            - name: bedrock
+            - name: be
               containerPort: 19132
               protocol: UDP
+
           env:
             - name: GATE_VELOCITY_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: minegate-velocity-secret
-                  key: VELOCITY_SECRET
+                  name: minegate-secret
+                  key: velocitySecret
+
           volumeMounts:
             - name: config
               mountPath: /config
               readOnly: true
+
           resources:
             requests:
               cpu: 500m
@@ -60,16 +56,19 @@ spec:
             limits:
               cpu: 2000m
               memory: 2Gi
+
           readinessProbe:
             tcpSocket:
               port: 25565
             initialDelaySeconds: 5
             periodSeconds: 10
+
           livenessProbe:
             tcpSocket:
               port: 25565
             initialDelaySeconds: 10
             periodSeconds: 20
+
       volumes:
         - name: config
           configMap:

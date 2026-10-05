@@ -29,7 +29,7 @@ spec:
       initContainers:
         - name: install-graalvm
           image: ghcr.io/graalvm/jdk-community:25
-          command:
+          command: # TODO 근데 이게 진짜 되는거임? 이미지에 박힌건?
             - sh
             - -c
             - |
@@ -79,15 +79,15 @@ spec:
             - name: CFG_VELOCITY_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: raw5-secrets
-                  key: VELOCITY_SECRET
+                  name: raw5-secret
+                  key: velocitySecret
             - name: ENABLE_RCON
               value: "true"
             - name: RCON_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: raw5-secrets
-                  key: RCON_PASSWORD
+                  name: raw5-secret
+                  key: rconPassword
             - name: VIEW_DISTANCE
               value: "512"
             - name: TICKS_PER_AUTOSAVE
@@ -130,7 +130,7 @@ spec:
       volumes:
         - name: config-override
           configMap:
-            name: raw5-config
+            name: raw5
         - name: jdk
           emptyDir: {}
 

@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: diver-lab
+  name: divelab
   namespace: diver-mcs
   labels:
-    app.kubernetes.io/name: diver-lab
+    app.kubernetes.io/name: divelab
 spec:
-  serviceName: diver-lab
+  serviceName: divelab
   replicas: 1 # Paper는 수평 확장 불가, 항상 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: diver-lab
+      app.kubernetes.io/name: divelab
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: diver-lab
+        app.kubernetes.io/name: divelab
     spec:
       affinity:
         nodeAffinity:
@@ -31,8 +31,6 @@ spec:
           ports:
             - name: minecraft
               containerPort: 25565
-            - name: rcon
-              containerPort: 25575
 
           env:
             - name: EULA
@@ -60,15 +58,15 @@ spec:
             - name: CFG_VELOCITY_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: diver-lab-secrets
-                  key: VELOCITY_SECRET
+                  name: divelab-secret
+                  key: velocitySecret
             - name: ENABLE_RCON
               value: "true"
             - name: RCON_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: diver-lab-secrets
-                  key: RCON_PASSWORD
+                  name: divelab-secret
+                  key: rconPassword
             - name: TICKS_PER_AUTOSAVE
               value: "1200"
 
@@ -103,7 +101,7 @@ spec:
       volumes:
         - name: config-override
           configMap:
-            name: diver-lab-config
+            name: divelab-config
 
   volumeClaimTemplates:
     - metadata:
