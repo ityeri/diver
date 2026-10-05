@@ -16,7 +16,7 @@ spec:
           port: 25565
 ---
 apiVersion: gateway.networking.k8s.io/v1
-kind: TCPRoute
+kind: UDPRoute
 metadata:
   name: route-be
   namespace: minegate
