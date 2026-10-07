@@ -3,14 +3,14 @@ kind: Gateway
 metadata:
   name: central-gateway
   namespace: default
-  annotations:
-    lbipam.cilium.io/sharing-key: central-vip
-    lbipam.cilium.io/sharing-cross-namespace: "*"
 spec:
   gatewayClassName: cilium
   allowedListeners:
     namespaces:
       from: All
+  addresses:
+    - type: IPAddress
+      value: 10.0.0.199
 
   listeners:
     - name: minegate-je
