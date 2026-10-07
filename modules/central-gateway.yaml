@@ -8,6 +8,10 @@ metadata:
     lbipam.cilium.io/sharing-cross-namespace: "*"
 spec:
   gatewayClassName: cilium
+  allowedListeners:
+    namespaces:
+      from: All
+
   listeners:
     - name: minegate-je
       port: 25565
