@@ -24,6 +24,6 @@ spec:
       port: 51820
       protocol: UDP
 
-    - name: lwyd
+    - name: lwyd-front
       port: 3000
       protocol: TCP

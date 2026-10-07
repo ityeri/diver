@@ -7,8 +7,7 @@ spec:
   parentRefs:
     - name: central-gateway
       namespace: infra
-      group: gateway.networking.k8s.io
-      kind: Gateway
+      sectionName: wireguard
   rules:
     - backendRefs:
         - name: wireguard
