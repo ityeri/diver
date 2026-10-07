@@ -25,5 +25,5 @@ spec:
       protocol: UDP
 
     - name: lwyd
-      port: 80
-      protocol: HTTP
+      port: 3000
+      protocol: TCP
