@@ -6,7 +6,7 @@ metadata:
 spec:
   parentRefs:
     - name: central-gateway
-      namespace: default
+      namespace: infra
       group: gateway.networking.k8s.io
       kind: Gateway
   rules:
@@ -23,7 +23,7 @@ metadata:
 spec:
   parentRefs:
     - name: central-gateway
-      namespace: default
+      namespace: infra
       group: gateway.networking.k8s.io
       kind: Gateway
   rules:
