@@ -45,3 +45,6 @@ externalIPs:
 k8sClientRateLimit:
   qps: 20
   burst: 40
+
+gatewayAPI:
+  enabled: true
