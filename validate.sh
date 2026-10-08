@@ -63,7 +63,7 @@ if ! have "$KZ" || ! have "$KC"; then echo "SKIP: No kustomize/kubeconform"; els
 fi
 
 banner 'flux build stage (Controller equal rendering)'
-if ! have "$FLUX" || ! have "$KC"; then echo "SKIP: flux/kubeconform 없음"; else
+if ! have "$FLUX" || ! have "$KC"; then echo "SKIP: No flux/kubeconform"; else
   t0=$SECONDS; : > "$T/prob"; : > "$T/sum"; : > "$T/cnt"
   mkdir -p "$T/sem"
   find ./clusters -name '*.yaml' -not -path '*/flux-system/*' | sort | while IFS= read -r k; do
@@ -83,13 +83,13 @@ if ! have "$FLUX" || ! have "$KC"; then echo "SKIP: flux/kubeconform 없음"; el
   print_stage "$T" 'flux build' "$((SECONDS-t0))"
 fi
 
-banner 'semantic stage (Gateway/Route/Secret 정합성)'
-if [ ! -f ./validate-semantics.py ]; then echo "SKIP: validate-semantics.py 없음"; else
+banner 'semantic stage (Gateway/Route/Secret consistency)'
+if [ ! -f ./validate_semantics.py ]; then echo "SKIP: No validate_semantics.py"; else
   if ! have python3 || ! python3 -c 'import yaml' >/dev/null 2>&1; then
-    echo "SKIP: python3+PyYAML 없음 (nix-shell -p python3Packages.pyyaml)"
-  elif [ ! -d "$T/sem" ]; then echo "SKIP: 이전 stage 렌더 실패"; else
+    echo "SKIP: No python3/PyYAML (nix-shell -p python3Packages.pyyaml)"
+  elif [ ! -d "$T/sem" ]; then echo "SKIP: Previous stage failed to render"; else
     t0=$SECONDS
-    python3 ./validate-semantics.py "$T"/sem/*.yaml > "$T/sem.out" 2>&1
+    python3 ./validate_semantics.py "$T"/sem/*.yaml > "$T/sem.out" 2>&1
     summary=$(grep '^SUMMARY:' "$T/sem.out" | tail -1)
     items=$(printf '%s' "$summary" | awk '{print $2}')
     errs=$(printf '%s' "$summary" | awk '{print $3}')
