@@ -48,6 +48,8 @@ k8sClientRateLimit:
 
 gatewayAPI:
   enabled: true
+  gatewayClass:
+    create: true
 
 # `helm template` regenerates an ephemeral CA on every render;
 # pin it here so re-rendering the manifests never rotates the cluster CA.
