@@ -26,7 +26,7 @@ spec:
               value: "^API_"
           ports:
             - name: http
-              protocol: HTTP
+              protocol: TCP
               containerPort: 80
           resources:
             requests:
