@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
-# Flux 매니페스트 로컬 검증 (클러스터 불필요).
-# usage: validate-flux.sh [-v] [repo-root]     -v: 정상 항목까지 전부 출력
-# 기본 동작: 문제(invalid/error/render fail)만 출력하고, 정상 항목은 스테이지별 요약 1줄로 끝낸다.
-# env override: KC/KZ/FLUX(바이너리 경로), KC_CACHE(스키마 캐시 디렉터리)
+# usage: validate-flux.sh [-v] [repo-root]     -v: Print all passed elements
+# env override: KC/KZ/FLUX(binary path), KC_CACHE(schema cache path)
 set -u
 V=0
 while [ $# -gt 0 ]; do case "$1" in -v|--verbose) V=1; shift;; *) break;; esac; done
 if [ $# -ge 1 ]; then REPO=$1
-else REPO=$(git rev-parse --show-toplevel 2>/dev/null) || { echo "git 저장소가 아님 — repo 루트를 인자로" >&2; exit 2; }
+else REPO=$(git rev-parse --show-toplevel 2>/dev/null) || { echo "Not a git repository. Use the REPO var as root path" >&2; exit 2; }
 fi
 cd "$REPO" || exit 2
 KC=${KC:-kubeconform}; KZ=${KZ:-kustomize}; FLUX=${FLUX:-flux}
@@ -31,12 +29,12 @@ print_stage() {
 }
 
 banner 'kubeconform stage (raw files)'
-if ! have "$KC"; then echo "SKIP: $KC 없음"; else
+if ! have "$KC"; then echo "SKIP: $KC Nothing"; else
   L="$T/files"; : > "$T/cnt"; : > "$T/prob"; : > "$T/sum"
   find . -path ./.git -prune -o -name '*.yaml' -print | sort | while IFS= read -r f; do
 grep -qE '^[[:space:]]*kind:' "$f" && printf '%s\0' "$f"
   done > "$L"
-  if [ ! -s "$L" ]; then echo "검증할 매니페스트 없음"; else
+  if [ ! -s "$L" ]; then echo "No manifests to validate"; else
     t0=$SECONDS
     tr -cd '\0' < "$L" | wc -c >> "$T/cnt"
     xargs -0 "$KC" $OPTS < "$L" > "$T/o" 2>&1 || true
@@ -46,8 +44,8 @@ grep -qE '^[[:space:]]*kind:' "$f" && printf '%s\0' "$f"
   fi
 fi
 
-banner 'kustomize stage (렌더 결과)'
-if ! have "$KZ" || ! have "$KC"; then echo "SKIP: kustomize/kubeconform 없음"; else
+banner 'kustomize stage (rendering result)'
+if ! have "$KZ" || ! have "$KC"; then echo "SKIP: No kustomize/kubeconform"; else
   t0=$SECONDS; : > "$T/prob"; : > "$T/sum"; : > "$T/cnt"
   find . -path ./.git -prune -o -name kustomization.yaml -print | sed 's|/kustomization.yaml$||' | sort \
   | while IFS= read -r d; do
@@ -64,7 +62,7 @@ if ! have "$KZ" || ! have "$KC"; then echo "SKIP: kustomize/kubeconform 없음";
   print_stage "$T" 'kustomize' "$((SECONDS-t0))"
 fi
 
-banner 'flux build stage (컨트롤러와 동일 렌더)'
+banner 'flux build stage (Controller equal rendering)'
 if ! have "$FLUX" || ! have "$KC"; then echo "SKIP: flux/kubeconform 없음"; else
   t0=$SECONDS; : > "$T/prob"; : > "$T/sum"; : > "$T/cnt"
   find ./clusters -name '*.yaml' -not -path '*/flux-system/*' | sort | while IFS= read -r k; do
