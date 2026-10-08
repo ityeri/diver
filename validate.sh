@@ -65,6 +65,7 @@ fi
 banner 'flux build stage (Controller equal rendering)'
 if ! have "$FLUX" || ! have "$KC"; then echo "SKIP: flux/kubeconform 없음"; else
   t0=$SECONDS; : > "$T/prob"; : > "$T/sum"; : > "$T/cnt"
+  mkdir -p "$T/sem"
   find ./clusters -name '*.yaml' -not -path '*/flux-system/*' | sort | while IFS= read -r k; do
     echo 1 >> "$T/cnt"
     n=$(awk '/^metadata:/{m=1} m&&/^  name:/{sub(/^  name: */,"");print;exit}' "$k")
@@ -73,12 +74,31 @@ if ! have "$FLUX" || ! have "$KC"; then echo "SKIP: flux/kubeconform 없음"; el
       printf 'RENDER FAIL %s (path=%s)\n' "$n" "$p" >> "$T/prob"; sed -n '1,3p' "$T/e" | cut -c1-300 >> "$T/prob"
       printf '0 0 1 0\n' >> "$T/sum"; continue
     fi
+    cp "$T/r.yaml" "$T/sem/$n.yaml"
     "$KC" $OPTS "$T/r.yaml" > "$T/o" 2>&1 || true
 [ "$V" -eq 1 ] && { printf '\n-- flux build %s\n' "$n"; cat "$T/o"; }
     fn_prob "$T/o" | sed "s|^|$n: |" >> "$T/prob"
     fn_sum "$T/o" >> "$T/sum"
   done
   print_stage "$T" 'flux build' "$((SECONDS-t0))"
+fi
+
+banner 'semantic stage (Gateway/Route/Secret 정합성)'
+if [ ! -f ./validate-semantics.py ]; then echo "SKIP: validate-semantics.py 없음"; else
+  if ! have python3 || ! python3 -c 'import yaml' >/dev/null 2>&1; then
+    echo "SKIP: python3+PyYAML 없음 (nix-shell -p python3Packages.pyyaml)"
+  elif [ ! -d "$T/sem" ]; then echo "SKIP: 이전 stage 렌더 실패"; else
+    t0=$SECONDS
+    python3 ./validate-semantics.py "$T"/sem/*.yaml > "$T/sem.out" 2>&1
+    summary=$(grep '^SUMMARY:' "$T/sem.out" | tail -1)
+    items=$(printf '%s' "$summary" | awk '{print $2}')
+    errs=$(printf '%s' "$summary" | awk '{print $3}')
+    if [ "${errs:-0}" -gt 0 ]; then
+      rc=1; probs=$((probs+errs))
+      grep -v '^SUMMARY:' "$T/sem.out"
+    fi
+    printf -- '-- semantic: %s items -> %s problems (%ss)\n' "${items:-0}" "${errs:-0}" "$((SECONDS-t0))"
+  fi
 fi
 
 printf '\n================\n'
