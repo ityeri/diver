@@ -29,7 +29,7 @@ spec:
       initContainers:
         - name: install-graalvm
           image: ghcr.io/graalvm/jdk-community:25
-          command: # TODO 근데 이게 진짜 되는거임? 이미지에 박힌건?
+          command:
             - sh
             - -c
             - |
