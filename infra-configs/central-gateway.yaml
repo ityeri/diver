@@ -5,9 +5,6 @@ metadata:
   namespace: infra
 spec:
   gatewayClassName: cilium
-  allowedListeners:
-    namespaces:
-      from: All
   addresses:
     - type: IPAddress
       value: 10.0.0.199
@@ -16,14 +13,26 @@ spec:
     - name: minegate-je
       port: 25565
       protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: minegate-be
       port: 19132
       protocol: UDP
+      allowedRoutes:
+        namespaces:
+          from: All
 
     - name: wireguard
       port: 51820
       protocol: UDP
+      allowedRoutes:
+        namespaces:
+          from: All
 
     - name: lwyd-front
       port: 3000
       protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
