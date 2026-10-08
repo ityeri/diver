@@ -26,13 +26,13 @@ config:
 env:
   # Discord-related variables are in the kustomization.yaml file as a patch
   # That patch will be applied to the raw-manifests.yaml file
-  DISCORD_ALLOWED_USERS: "Referenced from sealed_secret.yaml"
-  DISCORD_HOME_CHANNEL: "Referenced from sealed_secret.yaml"
+  DISCORD_ALLOWED_USERS: "Referenced from sealed-secret.yaml"
+  DISCORD_HOME_CHANNEL: "Referenced from sealed-secret.yaml"
   WHATSAPP_ENABLED: "false"
   AGENT_BROWSER_ARGS: "--no-sandbox"
 
 secrets:
-  existingSecret: hermes-agent-secrets
+  existingSecret: hermes-agent-secret
 
 persistence:
   enabled: true
@@ -61,7 +61,7 @@ extraVolumes:
       secretName: hermes-workspace-ssh
       defaultMode: 0644
       items:
-        - key: id_ed25519
+        - key: idEd25519
           path: id_ed25519
 
 extraVolumeMounts:

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: diver-lab-config
+  name: divelab-config
   namespace: diver-mcs
 data:
   paper-global.yml: |

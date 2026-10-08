@@ -5,12 +5,14 @@ metadata:
   name: infra-base
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: infra-crds
   interval: 1h
   retryInterval: 2m
   timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra-base
+  path: ./infra-base/
   prune: true
   wait: true

@@ -6,7 +6,8 @@ resources:
   - ./namespace.yaml
   - ./sealed-secret.yaml
   - ./deployment.yaml
-  - ./gateway.yaml
+  - ./service.yaml
+  - ./route.yaml
 
 configMapGenerator:
   - name: minegate-config

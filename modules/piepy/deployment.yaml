@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: piepy-secret
-                  key: BOT_TOKEN
+                  key: botToken
           resources:
             requests:
               cpu: 1000m

@@ -71,5 +71,5 @@ spec:
           secret:
             secretName: hermes-workspace-ssh
             items:
-              - key: authorized_keys
+              - key: authorizedKeys
                 path: authorized_keys

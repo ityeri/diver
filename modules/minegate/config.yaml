@@ -30,17 +30,17 @@ config:
     bind: 0.0.0.0:8080
 
   servers:
-    diverLab: diver-lab.diver-mcs.svc.cluster.local:25565
+    divelab: divelab.diver-mcs.svc.cluster.local:25565
     diverRaw5: raw5.diver-mcs.svc.cluster.local:25565
   # for example, like this:
   # lobby: lobby.mc.svc.cl...local:25565
   # -> value is kube-recognizable path. not a domain
   try:
-    - diverLab
+    - divelab
   # - lobby
 
   forcedHosts:
-    "lab.seena.cc": ["diverLab"]
+    "lab.seena.cc": ["divelab"]
     "raw5.seena.cc": ["diverRaw5"]
   # for example, like this:
   # 'abc.com': ['lobby']

@@ -5,4 +5,4 @@ resources:
   - ./sealed-secret.yaml
   - ./configmap.yaml
   - ./statefulset.yaml
-  - ./gateway.yaml
+  - ./service.yaml

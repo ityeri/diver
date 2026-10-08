@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: UDPRoute
+metadata:
+  name: wireguard
+  namespace: wireguard
+spec:
+  parentRefs:
+    - name: central-gateway
+      namespace: infra
+      sectionName: wireguard
+  rules:
+    - backendRefs:
+        - name: wireguard
+          kind: Service
+          port: 51820
