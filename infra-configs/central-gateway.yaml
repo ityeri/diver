@@ -32,7 +32,7 @@ spec:
 
     - name: lwyd-front
       port: 3000
-      protocol: TCP
+      protocol: HTTP
       allowedRoutes:
         namespaces:
           from: All
