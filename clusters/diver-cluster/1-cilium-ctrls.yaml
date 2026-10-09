@@ -1,16 +1,18 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra
+  name: cilium-ctrls
   namespace: flux-system
 spec:
   deletionPolicy: Orphan
+  dependsOn:
+    - name: infra-crds
   interval: 1h
   retryInterval: 2m
   timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/
+  path: ./infra/cilium/ctrls/
   prune: true
   wait: true
