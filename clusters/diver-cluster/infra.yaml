@@ -4,6 +4,7 @@ metadata:
   name: infra
   namespace: flux-system
 spec:
+  deletionPolicy: Orphan
   dependsOn:
     - name: infra
   interval: 1h

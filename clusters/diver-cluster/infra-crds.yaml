@@ -4,6 +4,7 @@ metadata:
   name: infra-crds
   namespace: flux-system
 spec:
+  deletionPolicy: Orphan
   interval: 1h
   retryInterval: 2m
   timeout: 5m
