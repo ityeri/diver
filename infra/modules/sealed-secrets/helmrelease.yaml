@@ -1,0 +1,76 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: sealed-secrets
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://bitnami.github.io/sealed-secrets
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: sealed-secrets
+  namespace: flux-system
+spec:
+  interval: 1h
+  targetNamespace: sealed-secrets
+  chart:
+    spec:
+      chart: sealed-secrets
+      version: 2.19.1
+      sourceRef:
+        kind: HelmRepository
+        name: sealed-secrets
+  install:
+    crds: Create
+    createNamespace: true
+    timeout: 10m
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+      strategy: rollback
+  values:
+    fullnameOverride: sealed-secrets-controller
+    
+    rbac:
+      create: true
+    
+    serviceAccount:
+      create: true
+      name: sealed-secrets-controller
+    
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
+    
+    podLabels:
+      app.kubernetes.io/part-of: sealed-secrets
+    
+    service:
+      type: ClusterIP
+    
+    networkPolicy:
+      enabled: false
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: sealed-secrets-controller
+              spec:
+                template:
+                  spec:
+                    tolerations:
+                      - key: node-role.kubernetes.io/control-plane
+                        operator: Exists
+                        effect: NoSchedule
+            target:
+              kind: Deployment
+              name: sealed-secrets-controller
