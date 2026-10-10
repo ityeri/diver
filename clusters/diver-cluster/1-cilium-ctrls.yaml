@@ -13,5 +13,6 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./infra/cilium/ctrls/
-  prune: true
+  # prune stays off until the HelmRelease cutover is verified
+  prune: false
   wait: true
