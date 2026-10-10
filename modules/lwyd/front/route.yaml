@@ -9,7 +9,7 @@ spec:
       namespace: infra
       sectionName: lwyd-front
   hostnames:
-    - seena.cc
+    - diver.ac
   rules:
     - backendRefs:
         - name: lwyd-front
