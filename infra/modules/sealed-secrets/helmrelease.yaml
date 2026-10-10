@@ -14,6 +14,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1h
+  releaseName: sealed-secrets
   targetNamespace: sealed-secrets
   chart:
     spec:
@@ -33,27 +34,27 @@ spec:
       strategy: rollback
   values:
     fullnameOverride: sealed-secrets-controller
-    
+
     rbac:
       create: true
-    
+
     serviceAccount:
       create: true
       name: sealed-secrets-controller
-    
+
     resources:
       requests:
         cpu: 10m
         memory: 64Mi
       limits:
         memory: 256Mi
-    
+
     podLabels:
       app.kubernetes.io/part-of: sealed-secrets
-    
+
     service:
       type: ClusterIP
-    
+
     networkPolicy:
       enabled: false
   postRenderers:

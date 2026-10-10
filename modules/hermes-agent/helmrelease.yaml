@@ -16,6 +16,7 @@ metadata:
   namespace: hermes-agent
 spec:
   interval: 1h
+  releaseName: hermes-agent
   targetNamespace: hermes-agent
   chart:
     spec:
@@ -35,7 +36,7 @@ spec:
   values:
     image:
       tag: "v2026.8.3"
-    
+
     config:
       values:
         model:
@@ -57,7 +58,7 @@ spec:
           inactivity_timeout: 120
           command_timeout: 30
           allow_private_urls: false
-    
+
     env:
       # Discord-related variables are in the kustomization.yaml file as a patch
       # That patch will be applied to the raw-manifests.yaml file
@@ -65,21 +66,21 @@ spec:
       DISCORD_HOME_CHANNEL: "Referenced from sealed-secret.yaml"
       WHATSAPP_ENABLED: "false"
       AGENT_BROWSER_ARGS: "--no-sandbox"
-    
+
     secrets:
       existingSecret: hermes-agent-secret
-    
+
     persistence:
       enabled: true
       storageClass: local-path
       size: 5Gi
       accessMode: ReadWriteOnce
-    
+
     browser:
       shm:
         enabled: true
         sizeLimit: 1Gi
-    
+
     resources:
       requests:
         cpu: 500m
@@ -87,9 +88,9 @@ spec:
       limits:
         cpu: "2"
         memory: 4Gi
-    
+
     tolerations: []
-    
+
     extraVolumes:
       - name: workspace-ssh-key
         secret:
@@ -98,7 +99,7 @@ spec:
           items:
             - key: idEd25519
               path: id_ed25519
-    
+
     extraVolumeMounts:
       - name: workspace-ssh-key
         mountPath: /run/secrets/workspace-ssh
