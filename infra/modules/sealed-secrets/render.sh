@@ -9,6 +9,7 @@ helm repo add sealed-secrets https://bitnami.github.io/sealed-secrets
 helm repo update sealed-secrets
 
 helm template sealed-secrets sealed-secrets/sealed-secrets \
+  --version 2.19.1 \
   --namespace sealed-secrets \
   --include-crds \
   -f "$SCRIPT_DIR/values.yaml" \
