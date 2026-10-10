@@ -4,7 +4,6 @@ metadata:
   name: infra-modules
   namespace: flux-system
 spec:
-  deletionPolicy: Orphan
   dependsOn:
     - name: cilium-config
   interval: 1h

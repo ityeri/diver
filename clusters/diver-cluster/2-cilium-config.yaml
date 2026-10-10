@@ -4,7 +4,6 @@ metadata:
   name: cilium-config
   namespace: flux-system
 spec:
-  deletionPolicy: Orphan
   dependsOn:
     - name: cilium-ctrls
   interval: 1h

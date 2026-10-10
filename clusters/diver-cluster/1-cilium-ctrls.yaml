@@ -4,7 +4,6 @@ metadata:
   name: cilium-ctrls
   namespace: flux-system
 spec:
-  deletionPolicy: Orphan
   dependsOn:
     - name: infra-crds
   interval: 1h
