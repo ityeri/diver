@@ -1,0 +1,185 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: hermes-agent-chart
+  namespace: hermes-agent
+spec:
+  interval: 1h
+  url: https://github.com/ultraworkers/hermes-agent-helm-chart
+  ref:
+    commit: "e3b685d4d0288668a37216435742cd0a659ebc6c"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hermes-agent
+  namespace: hermes-agent
+spec:
+  interval: 1h
+  targetNamespace: hermes-agent
+  chart:
+    spec:
+      chart: ./
+      sourceRef:
+        kind: GitRepository
+        name: hermes-agent-chart
+      reconcileStrategy: Revision
+  install:
+    crds: Create
+    timeout: 10m
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+      strategy: rollback
+  values:
+    image:
+      tag: "v2026.8.3"
+    
+    config:
+      values:
+        model:
+          default: deepseek-v4-flash
+          provider: deepseek
+          base_url: https://api.deepseek.com/v1
+        agent:
+          max_turns: 90
+          gateway_timeout: 1800
+        terminal:
+          backend: ssh
+          ssh_host: hermes-workspace.hermes-agent.svc.cluster.local
+          ssh_user: agent
+          ssh_port: 22
+          ssh_key: /run/secrets/workspace-ssh/id_ed25519
+          cwd: /config/workspace
+          timeout: 300
+        browser:
+          inactivity_timeout: 120
+          command_timeout: 30
+          allow_private_urls: false
+    
+    env:
+      # Discord-related variables are in the kustomization.yaml file as a patch
+      # That patch will be applied to the raw-manifests.yaml file
+      DISCORD_ALLOWED_USERS: "Referenced from sealed-secret.yaml"
+      DISCORD_HOME_CHANNEL: "Referenced from sealed-secret.yaml"
+      WHATSAPP_ENABLED: "false"
+      AGENT_BROWSER_ARGS: "--no-sandbox"
+    
+    secrets:
+      existingSecret: hermes-agent-secret
+    
+    persistence:
+      enabled: true
+      storageClass: local-path
+      size: 5Gi
+      accessMode: ReadWriteOnce
+    
+    browser:
+      shm:
+        enabled: true
+        sizeLimit: 1Gi
+    
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "2"
+        memory: 4Gi
+    
+    tolerations: []
+    
+    extraVolumes:
+      - name: workspace-ssh-key
+        secret:
+          secretName: hermes-workspace-ssh
+          defaultMode: 0644
+          items:
+            - key: idEd25519
+              path: id_ed25519
+    
+    extraVolumeMounts:
+      - name: workspace-ssh-key
+        mountPath: /run/secrets/workspace-ssh
+        readOnly: true
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: hermes-agent
+              spec:
+                template:
+                  spec:
+                    affinity:
+                      nodeAffinity:
+                        requiredDuringSchedulingIgnoredDuringExecution:
+                          nodeSelectorTerms:
+                            - matchExpressions:
+                                - key: kubernetes.io/hostname
+                                  operator: In
+                                  values:
+                                    - node-00-k8scp
+            target:
+              kind: Deployment
+              name: hermes-agent
+          # Allow s6-overlay to initialize as root then drop to uid 1000
+          - patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: hermes-agent
+              spec:
+                template:
+                  spec:
+                    securityContext:
+                      runAsUser: 0
+                      runAsGroup: 0
+                      runAsNonRoot: false
+                      fsGroup: 1000
+                    initContainers:
+                      - name: bootstrap-config
+                        securityContext:
+                          runAsUser: 0
+                          runAsNonRoot: false
+                          allowPrivilegeEscalation: true
+                          readOnlyRootFilesystem: false
+                          capabilities:
+                            drop: []
+                    containers:
+                      - name: hermes-agent
+                        securityContext:
+                          allowPrivilegeEscalation: true
+                          readOnlyRootFilesystem: false
+                          capabilities:
+                            drop: []
+                            add:
+                              - CHOWN
+                              - SETUID
+                              - SETGID
+                              - DAC_OVERRIDE
+            target:
+              kind: Deployment
+              name: hermes-agent
+          # The Discord settings come from the sealed secret, not from the chart
+          - patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: hermes-agent
+              spec:
+                template:
+                  spec:
+                    containers:
+                      - name: hermes-agent
+                        env:
+                          - name: DISCORD_ALLOWED_USERS
+                            $patch: delete
+                          - name: DISCORD_HOME_CHANNEL
+                            $patch: delete
+            target:
+              kind: Deployment
+              name: hermes-agent

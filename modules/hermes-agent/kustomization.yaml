@@ -5,33 +5,11 @@ namespace: hermes-agent
 
 resources:
   - ./namespace.yaml
-  - ./raw-manifests.yaml
+  - ./helmrelease.yaml
   - ./sealed-secret.yaml
   - ./workspace-vm/
 
 patches:
-  # Node affinity for hermes-agent deployment
-  - patch: |-
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: hermes-agent
-      spec:
-        template:
-          spec:
-            affinity:
-              nodeAffinity:
-                requiredDuringSchedulingIgnoredDuringExecution:
-                  nodeSelectorTerms:
-                    - matchExpressions:
-                        - key: kubernetes.io/hostname
-                          operator: In
-                          values:
-                            - node-00-k8scp
-    target:
-      kind: Deployment
-      name: hermes-agent
-
   # Node affinity for workspace-vm
   - patch: |-
       apiVersion: apps/v1
@@ -53,62 +31,3 @@ patches:
     target:
       kind: Deployment
       name: hermes-workspace
-
-  # Allow s6-overlay to initialize as root then drop to uid 1000
-  - patch: |-
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: hermes-agent
-      spec:
-        template:
-          spec:
-            securityContext:
-              runAsUser: 0
-              runAsGroup: 0
-              runAsNonRoot: false
-              fsGroup: 1000
-            initContainers:
-              - name: bootstrap-config
-                securityContext:
-                  runAsUser: 0
-                  runAsNonRoot: false
-                  allowPrivilegeEscalation: true
-                  readOnlyRootFilesystem: false
-                  capabilities:
-                    drop: []
-            containers:
-              - name: hermes-agent
-                securityContext:
-                  allowPrivilegeEscalation: true
-                  readOnlyRootFilesystem: false
-                  capabilities:
-                    drop: []
-                    add:
-                      - CHOWN
-                      - SETUID
-                      - SETGID
-                      - DAC_OVERRIDE
-    target:
-      kind: Deployment
-      name: hermes-agent
-
-  # Discord secret value patch for hermes-agent raw manifests
-  - patch: |-
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: hermes-agent
-      spec:
-        template:
-          spec:
-            containers:
-              - name: hermes-agent
-                env:
-                  - name: DISCORD_ALLOWED_USERS
-                    $patch: delete
-                  - name: DISCORD_HOME_CHANNEL
-                    $patch: delete
-    target:
-      kind: Deployment
-      name: hermes-agent
