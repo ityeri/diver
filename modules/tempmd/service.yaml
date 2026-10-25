@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: service
+  name: tempmd-server
   namespace: tempmd
 spec:
   ports:
@@ -16,11 +16,11 @@ spec:
 apiVersion: discovery.k8s.io/v1
 kind: EndpointSlice
 metadata:
-  name: tempmd-1
+  name: tempmd-server-1
   namespace: tempmd
   labels:
     # EndpointSlice can be matched with only Service that beloinging to the same ns
-    kubernetes.io/service-name: service
+    kubernetes.io/service-name: tempmd-server
 addressType: IPv4
 ports:
   - name: tcp

@@ -10,7 +10,7 @@ spec:
       sectionName: tempmd-tcp
   rules:
     - backendRefs:
-        - name: service
+        - name: tempmd-server
           port: 6567
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -25,5 +25,5 @@ spec:
       sectionName: tempmd-udp
   rules:
     - backendRefs:
-        - name: service
+        - name: tempmd-server
           port: 6567
