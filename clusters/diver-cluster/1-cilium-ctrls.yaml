@@ -13,4 +13,5 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./infra/cilium/ctrls/
+  prune: true
   wait: true
