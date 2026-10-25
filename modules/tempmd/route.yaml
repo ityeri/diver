@@ -1,0 +1,29 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: route-tcp
+  namespace: tempmd
+spec:
+  parentRefs:
+    - name: central-gateway
+      namespace: infra
+      sectionName: tempmd-tcp
+  rules:
+    - backendRefs:
+        - name: service
+          port: 6567
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: UDPRoute
+metadata:
+  name: route-udp
+  namespace: tempmd
+spec:
+  parentRefs:
+    - name: central-gateway
+      namespace: infra
+      sectionName: tempmd-udp
+  rules:
+    - backendRefs:
+        - name: service
+          port: 6567

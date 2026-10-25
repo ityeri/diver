@@ -36,3 +36,16 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+
+    - name: tempmd-tcp
+      port: 6567
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: tempmd-udp
+      port: 6567
+      protocol: UDP
+      allowedRoutes:
+        namespaces:
+          from: All

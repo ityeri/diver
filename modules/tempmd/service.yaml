@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service
+  namespace: tempmd
+spec:
+  ports:
+    - name: tcp
+      protocol: TCP
+      port: 6567
+    - name: udp
+      protocol: UDP
+      port: 6567
+  # no selector..
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: tempmd-1
+  namespace: tempmd
+  labels:
+    # EndpointSlice can be matched with only Service that beloinging to the same ns
+    kubernetes.io/service-name: service
+addressType: IPv4
+ports:
+  - name: tcp
+    protocol: TCP
+    port: 6567
+  - name: udp
+    protocol: UDP
+    port: 6567
+endpoints:
+  - addresses:
+      - 10.0.0.236
